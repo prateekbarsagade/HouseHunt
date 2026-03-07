@@ -58,16 +58,14 @@ const OwnerHome = () => {
                 for (let f of images) fd.append('images', f);
             }
 
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+
             if (editingId) {
-                await axios.put(`${API}/owners/properties/${editingId}`, fd, {
-                    headers: { Authorization: `Bearer ${user.token}`, 'Content-Type': 'multipart/form-data' }
-                });
+                await axios.put(`${API}/owners/properties/${editingId}`, fd, config);
                 alert('Property updated!');
                 setEditingId(null);
             } else {
-                await axios.post(`${API}/owners/properties`, fd, {
-                    headers: { Authorization: `Bearer ${user.token}`, 'Content-Type': 'multipart/form-data' }
-                });
+                await axios.post(`${API}/owners/properties`, fd, config);
                 alert('Property added!');
             }
 
@@ -76,7 +74,7 @@ const OwnerHome = () => {
             fetchProperties();
             setActiveTab('properties');
         } catch (err) {
-            alert('Failed to save property');
+            alert(err.response?.data?.message || 'Failed to save property');
         }
     };
 
